@@ -135,13 +135,13 @@
 				<key>lastpathcomponent</key>
 				<false/>
 				<key>onlyshowifquerypopulated</key>
-				<false/>
+				<true/>
 				<key>removeextension</key>
 				<false/>
 				<key>text</key>
 				<string>{query}</string>
 				<key>title</key>
-				<string>Embé?</string>
+				<string>LastPass Login</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.notification</string>
@@ -158,7 +158,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>./lastpass.js 'ask_password'</string>
+				<string>./lastpass.js 'sign_in'</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -276,14 +276,14 @@
 		<key>28DC9509-BDE3-4DDD-B9F9-B63F2F619538</key>
 		<dict>
 			<key>xpos</key>
-			<real>485</real>
+			<real>550</real>
 			<key>ypos</key>
 			<real>195</real>
 		</dict>
 		<key>78D42D6F-BE33-47AD-8701-EE0122A028C9</key>
 		<dict>
 			<key>xpos</key>
-			<real>515</real>
+			<real>550</real>
 			<key>ypos</key>
 			<real>70</real>
 		</dict>
@@ -304,14 +304,14 @@
 		<key>9E2DCA84-9871-477E-AC81-64A3F4923576</key>
 		<dict>
 			<key>xpos</key>
-			<real>650</real>
+			<real>715</real>
 			<key>ypos</key>
 			<real>35</real>
 		</dict>
 		<key>AC1420A8-86FC-41F6-977D-0F101DEC7DD9</key>
 		<dict>
 			<key>xpos</key>
-			<real>650</real>
+			<real>715</real>
 			<key>ypos</key>
 			<real>195</real>
 		</dict>
