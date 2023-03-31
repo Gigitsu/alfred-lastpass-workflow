@@ -101,12 +101,25 @@ function _stdout(text) {
     .writeData($.NSString.alloc.initWithString(text + '\n').dataUsingEncoding($.NSUTF8StringEncoding))
 }
 
-// String[] -> Either
+// String, String[] -> Either
 function _execute(executableUrl, ...args) {
+  return _executeWithInput(executableUrl, false, ...args)
+}
+
+// Stromg. Stromg|Boolean, String[] -> Either
+function _executeWithInput(executableUrl, input, ...args) {
   const task = $.NSTask.alloc.init
+
+  const stdin = $.NSPipe.pipe
   const stdout = $.NSPipe.pipe
 
+  if(input) {
+    stdin.fileHandleForWriting.writeData($.NSString.alloc.initWithString(input + '\n').dataUsingEncoding($.NSUTF8StringEncoding))
+    stdin.fileHandleForWriting.closeAndReturnError(false)
+  }
+
   task.arguments = args
+  task.standardInput = stdin
   task.standardOutput = stdout
   task.executableURL = $.NSURL.alloc.initFileURLWithPath(executableUrl)
 
