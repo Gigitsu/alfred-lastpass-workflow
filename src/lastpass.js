@@ -16,7 +16,7 @@ function run(argv) {
     if (typeof fn === 'function') {
       const args = Array.prototype.slice.call(argv, 1)
       if(![signIn].includes(fn)) _checkStatus(lpass)
-      return fn.apply(global, args)
+      return fn.apply(global, [lpass, ...args])
     }
   }
 }
@@ -26,11 +26,11 @@ function run(argv) {
 // Exposed functions
 ////////////////////
 
-function signIn() {
+function signIn(lpass) {
   const username = _env('username') || _prompt('Enter username', 'Enter your LastPass username') (_ => _exit()) (_storeAndReturn('username'))
   const password = _prompt('Enter password', 'Enter your LastPass master password', true) (_ => _exit()) (_)
 
-  _returnToAlfred(username + " " + password)
+  _executeWithInput(lpass, password, 'login', '--trust', username) (err => _returnToAlfred(err)) (_ => _returnToAlfred('Successfully logged in'))
 }
 
 function list() {
@@ -45,6 +45,9 @@ function list() {
 const which = '/usr/bin/which'
 
 function _init() {
+  // Eport some lpass env variable configuration
+  _store('LPASS_DISABLE_PINENTRY', 1)
+
   // Check LastPass installation
   return _execute(which, 'lpass') (_ => _returnToAlfred(_installResponse())) (_)
 }
@@ -111,24 +114,28 @@ function _executeWithInput(executableUrl, input, ...args) {
   const task = $.NSTask.alloc.init
 
   const stdin = $.NSPipe.pipe
+  const stderr = $.NSPipe.pipe
   const stdout = $.NSPipe.pipe
 
   if(input) {
-    stdin.fileHandleForWriting.writeData($.NSString.alloc.initWithString(input + '\n').dataUsingEncoding($.NSUTF8StringEncoding))
+    stdin.fileHandleForWriting.writeData($.NSString.alloc.initWithString(input).dataUsingEncoding($.NSUTF8StringEncoding))
     stdin.fileHandleForWriting.closeAndReturnError(false)
   }
 
   task.arguments = args
   task.standardInput = stdin
+  task.standardError = stderr
   task.standardOutput = stdout
   task.executableURL = $.NSURL.alloc.initFileURLWithPath(executableUrl)
 
   task.launchAndReturnError(false)
 
-  const dataOut = stdout.fileHandleForReading.readDataToEndOfFile
-  const stringOut = $.NSString.alloc.initWithDataEncoding(dataOut, $.NSUTF8StringEncoding).js.trimEnd()
+  const outMsg = stdout.fileHandleForReading.readDataToEndOfFile
+  const errMsg = stderr.fileHandleForReading.readDataToEndOfFile
 
-  return task.terminationStatus == 0 ?  Right(stringOut) : Left(stringOut)
+  return task.terminationStatus == 0 ?
+    Right($.NSString.alloc.initWithDataEncoding(outMsg, $.NSUTF8StringEncoding).js.trimEnd()) :
+    Left($.NSString.alloc.initWithDataEncoding(errMsg, $.NSUTF8StringEncoding).js.trimEnd())
 }
 
 // String -> String -> String
