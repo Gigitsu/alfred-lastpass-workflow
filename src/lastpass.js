@@ -130,8 +130,8 @@ function _executeWithInput(executableUrl, input, ...args) {
 
   task.launchAndReturnError(false)
 
-  const outMsg = stdout.fileHandleForReading.readDataToEndOfFile
-  const errMsg = stderr.fileHandleForReading.readDataToEndOfFile
+  const outMsg = stdout.fileHandleForReading.readDataToEndOfFileAndReturnError(false)
+  const errMsg = stderr.fileHandleForReading.readDataToEndOfFileAndReturnError(false)
 
   return task.terminationStatus == 0 ?
     Right($.NSString.alloc.initWithDataEncoding(outMsg, $.NSUTF8StringEncoding).js.trimEnd()) :
