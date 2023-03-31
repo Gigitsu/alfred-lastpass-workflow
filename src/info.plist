@@ -36,6 +36,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>861B2868-ECAB-4998-A447-65152165D1ED</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>BAC34065-493A-4E6B-934A-CA46C199551B</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>889420DF-70FB-4C91-BA11-D1AE04AA4494</key>
 		<array>
 			<dict>
@@ -68,6 +81,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>889420DF-70FB-4C91-BA11-D1AE04AA4494</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>F3829D5E-58C2-4E88-A324-DF9FF9AE77FF</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>BAC34065-493A-4E6B-934A-CA46C199551B</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -215,6 +241,11 @@
 				<key>withspace</key>
 				<true/>
 			</dict>
+			<key>inboundconfig</key>
+			<dict>
+				<key>externalid</key>
+				<string>search_items</string>
+			</dict>
 			<key>type</key>
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
@@ -268,6 +299,69 @@
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>externaltriggerid</key>
+				<string>search_items</string>
+				<key>passinputasargument</key>
+				<true/>
+				<key>passvariables</key>
+				<true/>
+				<key>workflowbundleid</key>
+				<string>self</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.callexternaltrigger</string>
+			<key>uid</key>
+			<string>BAC34065-493A-4E6B-934A-CA46C199551B</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>action</key>
+				<integer>0</integer>
+				<key>argument</key>
+				<integer>0</integer>
+				<key>focusedappvariable</key>
+				<false/>
+				<key>focusedappvariablename</key>
+				<string></string>
+				<key>hotkey</key>
+				<integer>0</integer>
+				<key>hotmod</key>
+				<integer>0</integer>
+				<key>hotstring</key>
+				<string></string>
+				<key>leftcursor</key>
+				<false/>
+				<key>modsmode</key>
+				<integer>0</integer>
+				<key>relatedAppsMode</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.hotkey</string>
+			<key>uid</key>
+			<string>861B2868-ECAB-4998-A447-65152165D1ED</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>text</key>
+				<string>Search LastPass for '{query}'</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.trigger.fallback</string>
+			<key>uid</key>
+			<string>F3829D5E-58C2-4E88-A324-DF9FF9AE77FF</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
 	</array>
 	<key>readme</key>
 	<string></string>
@@ -286,6 +380,13 @@
 			<real>550</real>
 			<key>ypos</key>
 			<real>70</real>
+		</dict>
+		<key>861B2868-ECAB-4998-A447-65152165D1ED</key>
+		<dict>
+			<key>xpos</key>
+			<real>45</real>
+			<key>ypos</key>
+			<real>565</real>
 		</dict>
 		<key>889420DF-70FB-4C91-BA11-D1AE04AA4494</key>
 		<dict>
@@ -314,6 +415,20 @@
 			<real>715</real>
 			<key>ypos</key>
 			<real>195</real>
+		</dict>
+		<key>BAC34065-493A-4E6B-934A-CA46C199551B</key>
+		<dict>
+			<key>xpos</key>
+			<real>240</real>
+			<key>ypos</key>
+			<real>565</real>
+		</dict>
+		<key>F3829D5E-58C2-4E88-A324-DF9FF9AE77FF</key>
+		<dict>
+			<key>xpos</key>
+			<real>45</real>
+			<key>ypos</key>
+			<real>705</real>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
