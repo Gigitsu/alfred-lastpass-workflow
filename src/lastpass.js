@@ -8,13 +8,14 @@ const global = this
 const app = Application.currentApplication()
 app.includeStandardAdditions = true
 
-const defaultEnv = {'HOME': _env('HOME')}
+const defaultEnv = { 'HOME': _env('HOME') }
+const defaultItem = { icon: { path: 'icon_round.png' } }
 
 //---------------------------------------------------------------------------------------------------------------------
 
 // Entrypoint
 function run(argv) {
-  if(argv.length) {
+  if (argv.length) {
     const fnName = _toCamelCase(argv[0].replace(/^_+/, ''))
     const fn = global[fnName]
 
@@ -22,7 +23,7 @@ function run(argv) {
 
     if (typeof fn === 'function') {
       const args = Array.prototype.slice.call(argv, 1)
-      if(![signIn].includes(fn)) _checkStatus(lpass)
+      if (![signIn].includes(fn)) _checkStatus(lpass)
       return fn.apply(global, [lpass, ...args])
     }
   }
@@ -34,12 +35,12 @@ function run(argv) {
 ////////////////////
 
 function signIn(lpass, username) {
-  const password = _prompt('Enter password', 'Enter your LastPass master password', true) (_ => _exit()) (_)
+  const password = _prompt('Enter password', 'Enter your LastPass master password', true)(_ => _exit())(_)
 
-  const env = {'LPASS_DISABLE_PINENTRY': 1, ...defaultEnv}
+  const env = { 'LPASS_DISABLE_PINENTRY': 1, ...defaultEnv }
   _durationToSeconds(_env('agent_timeout'))(_)(d => env['LPASS_AGENT_TIMEOUT'] = d)
 
-  _execWithInputAndEnv(lpass, password, env, 'login', '--trust', username) (err => _returnToAlfred(err)) (_ => _returnToAlfred('Successfully logged in'))
+  _execWithInputAndEnv(lpass, password, env, 'login', '--trust', username)(err => _returnToAlfred(err))(_ => _returnToAlfred('Successfully logged in'))
 }
 
 function list() {
@@ -48,66 +49,47 @@ function list() {
 
 //---------------------------------------------------------------------------------------------------------------------
 
-// Tools
-////////
+// LastPass CLI integration
+///////////////////////////
 
-const which = '/usr/bin/which'
-
+// () -> Either
 function _checkInstallation() {
   // Check LastPass installation
-  return _exec(which, 'lpass') (_ => _returnToAlfred(_installResponse())) (_)
+  return _exec('/usr/bin/which', 'lpass') (_installResponse) (_)
 }
 
+// String -> Either
 function _checkStatus(lpass) {
   // Check is authenticated
-  return _execWithEnv(lpass, {}, 'status', '-q') (_ => _returnToAlfred(_signinResponse())) (_)
+  return _execWithEnv(lpass, {}, 'status', '-q') (_signinResponse) (_)
 }
 
+//---------------------------------------------------------------------------------------------------------------------
+
+// Alfred integration
+/////////////////////
+
+// () -> ()
 function _installResponse() {
-  return {items: [_item({title: 'Install LastPass CLI', sub: 'LastPass CLI is needed to use this workflow', value: 'install', icon: 'icon_install.png'})]}
+  return _returnToAlfred({
+    items: [{
+      title: 'Install LastPass CLI', subtitle: 'LastPass CLI is needed to use this workflow',
+      arg: 'install',
+      icon: { path: 'icon_install.png' },
+    }]
+  })
 }
 
+// () -> ()
 function _signinResponse() {
-  const items = []
-
-  for(const account of _env('accounts_list').split(/\r?\n/)) {
-    items.push(_item({title: `SignIn as ${account}`, sub: `Authenticate using ${account} master password`, value: 'sign_in', icon: 'icon_configure.png', variables: {username: account}}))
-  }
-
-  return {items: items}
-}
-
-function _item({title, value, sub = '', variables = {}, icon = 'icon_round.png'}) {
-  return {title: title, subtitle: sub, arg: value, variables: variables, icon: {path: icon}}
-}
-
-// String -> String
-function _toCamelCase(str) {
-  return str.toLowerCase().replace(/([-_][a-z])/g, g => g[1].toUpperCase())
-}
-
-function _durationToSeconds(duration) {
-  const matches = duration.match(/(?<quantity>\d+\s*)(?<um>\w+)/)
-
-  if(matches) {
-    const um = matches[2]
-    let result = parseInt(matches[1].trimEnd())
-    if(['s', 'second', 'seconds'].includes(um)) return Right(result)
-
-    result *= 60
-    if(['m', 'minute', 'minutes'].includes(um)) return Right(result)
-
-    result *= 60
-    if(['h', 'hour', 'hours'].includes(um)) return Right(result)
-
-    result *= 24
-    if(['d', 'day', 'days'].includes(um)) return Right(result)
-
-    result *= 7
-    if(['w', 'week', 'weeks'].includes(um)) return Right(result)
-  }
-
-  return Left()
+  return _returnToAlfred({
+    items: _env('accounts_list').split(/\r?\n/).map(account => ({
+      title: `SignIn as ${account}`, subtitle: `Authenticate using ${account} master password`,
+      arg: 'sign_in',
+      variables: { username: account },
+      icon: { path: 'icon_configure.png' },
+    }))
+  })
 }
 
 // Object -> ()
@@ -117,7 +99,19 @@ function _returnToAlfred(obj) {
   _exit(0)
 }
 
-function _prompt(title, msg, hidden=false) {
+// String, String -> ()
+function _storeConfig(key, value) {
+  Application('com.runningwithcrayons.Alfred')
+    .setConfiguration(key, { toValue: value, inWorkflow: _env('alfred_workflow_bundleid') });
+}
+
+//---------------------------------------------------------------------------------------------------------------------
+
+// macOS integration
+////////////////////
+
+// String, String, Boolean -> Either
+function _prompt(title, msg, hidden = false) {
   const options = {
     buttons: ['OK', 'Cancel'], defaultButton: 'OK', cancelButton: 'Cancel',
     defaultAnswer: "", hiddenAnswer: hidden,
@@ -158,12 +152,12 @@ function _execWithInputAndEnv(executableUrl, input, env, ...args) {
   const stderr = $.NSPipe.pipe
   const stdout = $.NSPipe.pipe
 
-  if(input) {
+  if (input) {
     stdin.fileHandleForWriting.writeData($.NSString.alloc.initWithString(input).dataUsingEncoding($.NSUTF8StringEncoding))
     stdin.fileHandleForWriting.closeAndReturnError(false)
   }
 
-  if(env) {
+  if (env) {
     task.environment = env
   }
 
@@ -183,22 +177,13 @@ function _execWithInputAndEnv(executableUrl, input, env, ...args) {
     Left($.NSString.alloc.initWithDataEncoding(errMsg, $.NSUTF8StringEncoding).js.trimEnd())
 }
 
-// String -> String -> String
-function _storeAndReturn(key) {
-  return value => _store(key, value) || value
-}
-
-function _store(key, value) {
-  Application('com.runningwithcrayons.Alfred')
-    .setConfiguration(key, {toValue: value, inWorkflow: _env('alfred_workflow_bundleid')});
-}
-
 // String -> String|Boolean
 function _env(name) {
   try { return $.getenv(name) }
   catch { return '' }
 }
 
+// Integer -> ()
 function _exit(code = 0) {
   $.exit(code)
 }
@@ -207,8 +192,37 @@ function _exit(code = 0) {
 
 // Utilities
 ////////////
-const _           = x => x
-const Left        = x => l => r => l (x)
-const Right       = x => l => r => r (x)
-const OnLeft      = e => l => e (l) (x => x)
-const ExitOnLeft  = e => l => OnLeft (e) (x => {l(x); _exit(0)})
+
+const _ = x => x
+const Left = x => l => r => l(x)
+const Right = x => l => r => r(x)
+const OnLeft = e => l => e(l)(x => x)
+const ExitOnLeft = e => l => OnLeft(e)(x => { l(x); _exit(0) })
+
+// String -> String
+const _toCamelCase = str => str.toLowerCase().replace(/([-_][a-z])/g, g => g[1].toUpperCase())
+
+// String -> Integer
+function _durationToSeconds(duration) {
+  const matches = duration.match(/(?<quantity>\d+\s*)(?<um>\w+)/)
+
+  if (matches) {
+    const um = matches[2]
+    let result = parseInt(matches[1].trimEnd())
+    if (['s', 'second', 'seconds'].includes(um)) return Right(result)
+
+    result *= 60
+    if (['m', 'minute', 'minutes'].includes(um)) return Right(result)
+
+    result *= 60
+    if (['h', 'hour', 'hours'].includes(um)) return Right(result)
+
+    result *= 24
+    if (['d', 'day', 'days'].includes(um)) return Right(result)
+
+    result *= 7
+    if (['w', 'week', 'weeks'].includes(um)) return Right(result)
+  }
+
+  return Left()
+}
