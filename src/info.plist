@@ -184,7 +184,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>./lastpass.js 'sign_in'</string>
+				<string>./lastpass.js 'sign_in' $username</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -441,7 +441,7 @@
 				<key>placeholder</key>
 				<string></string>
 				<key>required</key>
-				<false/>
+				<true/>
 				<key>trim</key>
 				<true/>
 			</dict>
@@ -453,6 +453,69 @@
 			<string>textfield</string>
 			<key>variable</key>
 			<string>items_search_keyword</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+				<key>verticalsize</key>
+				<integer>3</integer>
+			</dict>
+			<key>description</key>
+			<string>List of account's usernames you want to manage. One username per line</string>
+			<key>label</key>
+			<string>Accounts</string>
+			<key>type</key>
+			<string>textarea</string>
+			<key>variable</key>
+			<string>accounts_list</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string>eg. 30m | 1h | 1d</string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>How long before your LastPass session expires. Once expired, you have to authenticate again with your master password. Use 0 to never expire, leave it blank to use default value.</string>
+			<key>label</key>
+			<string>Session Duration</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>agent_timeout</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>30s</string>
+				<key>placeholder</key>
+				<string></string>
+				<key>required</key>
+				<true/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>How log password will be in your clipboard</string>
+			<key>label</key>
+			<string>Clipboard Timeout</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>clipboard_timeout</string>
 		</dict>
 		<dict>
 			<key>config</key>

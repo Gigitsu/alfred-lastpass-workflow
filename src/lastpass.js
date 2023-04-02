@@ -1,9 +1,16 @@
 #!/usr/bin/osascript -l JavaScript
 ObjC.import('stdlib')
 
+// Global configurations
+////////////////////////
 const global = this
+
 const app = Application.currentApplication()
 app.includeStandardAdditions = true
+
+const defaultEnv = {'HOME': _env('HOME')}
+
+//---------------------------------------------------------------------------------------------------------------------
 
 // Entrypoint
 function run(argv) {
@@ -11,7 +18,7 @@ function run(argv) {
     const fnName = _toCamelCase(argv[0].replace(/^_+/, ''))
     const fn = global[fnName]
 
-    const lpass = _init()
+    const lpass = _checkInstallation()
 
     if (typeof fn === 'function') {
       const args = Array.prototype.slice.call(argv, 1)
@@ -26,11 +33,13 @@ function run(argv) {
 // Exposed functions
 ////////////////////
 
-function signIn(lpass) {
-  const username = _env('username') || _prompt('Enter username', 'Enter your LastPass username') (_ => _exit()) (_storeAndReturn('username'))
+function signIn(lpass, username) {
   const password = _prompt('Enter password', 'Enter your LastPass master password', true) (_ => _exit()) (_)
 
-  _executeWithInput(lpass, password, 'login', '--trust', username) (err => _returnToAlfred(err)) (_ => _returnToAlfred('Successfully logged in'))
+  const env = {'LPASS_DISABLE_PINENTRY': 1, ...defaultEnv}
+  _durationToSeconds(_env('agent_timeout'))(_)(d => env['LPASS_AGENT_TIMEOUT'] = d)
+
+  _execWithInputAndEnv(lpass, password, env, 'login', '--trust', username) (err => _returnToAlfred(err)) (_ => _returnToAlfred('Successfully logged in'))
 }
 
 function list() {
@@ -44,39 +53,61 @@ function list() {
 
 const which = '/usr/bin/which'
 
-function _init() {
-  // Eport some lpass env variable configuration
-  _store('LPASS_DISABLE_PINENTRY', 1)
-
+function _checkInstallation() {
   // Check LastPass installation
-  return _execute(which, 'lpass') (_ => _returnToAlfred(_installResponse())) (_)
+  return _exec(which, 'lpass') (_ => _returnToAlfred(_installResponse())) (_)
 }
 
 function _checkStatus(lpass) {
   // Check is authenticated
-  return _execute(lpass, 'status', '-q') (_ => _returnToAlfred(_signinResponse())) (_)
-}
-
-// () -> String
-function _printHelp() {
-  _stdout('Invalid argument passed')
+  return _execWithEnv(lpass, {}, 'status', '-q') (_ => _returnToAlfred(_signinResponse())) (_)
 }
 
 function _installResponse() {
-  return {items: [_item({title:'Install LastPass CLI', sub:'LastPass CLI is needed to use this workflow', value:'install', icon:'icon_install.png'})]}
+  return {items: [_item({title: 'Install LastPass CLI', sub: 'LastPass CLI is needed to use this workflow', value: 'install', icon: 'icon_install.png'})]}
 }
 
 function _signinResponse() {
-  return {items: [_item({title:'SignIn and fetch items', sub:'Authenticate using your master password', value:'sign_in', icon:'icon_configure.png'})]}
+  const items = []
+
+  for(const account of _env('accounts_list').split(/\r?\n/)) {
+    items.push(_item({title: `SignIn as ${account}`, sub: `Authenticate using ${account} master password`, value: 'sign_in', icon: 'icon_configure.png', variables: {username: account}}))
+  }
+
+  return {items: items}
 }
 
-function _item({title, value, sub = '', icon = 'icon_round.png'}) {
-  return {title: title, subtitle: sub, arg: value, icon: {path: icon}}
+function _item({title, value, sub = '', variables = {}, icon = 'icon_round.png'}) {
+  return {title: title, subtitle: sub, arg: value, variables: variables, icon: {path: icon}}
 }
 
 // String -> String
 function _toCamelCase(str) {
   return str.toLowerCase().replace(/([-_][a-z])/g, g => g[1].toUpperCase())
+}
+
+function _durationToSeconds(duration) {
+  const matches = duration.match(/(?<quantity>\d+\s*)(?<um>\w+)/)
+
+  if(matches) {
+    const um = matches[2]
+    let result = parseInt(matches[1].trimEnd())
+    if(['s', 'second', 'seconds'].includes(um)) return Right(result)
+
+    result *= 60
+    if(['m', 'minute', 'minutes'].includes(um)) return Right(result)
+
+    result *= 60
+    if(['h', 'hour', 'hours'].includes(um)) return Right(result)
+
+    result *= 24
+    if(['d', 'day', 'days'].includes(um)) return Right(result)
+
+    result *= 7
+    if(['w', 'week', 'weeks'].includes(um)) return Right(result)
+  }
+
+  return Left()
 }
 
 // Object -> ()
@@ -105,12 +136,22 @@ function _stdout(text) {
 }
 
 // String, String[] -> Either
-function _execute(executableUrl, ...args) {
-  return _executeWithInput(executableUrl, false, ...args)
+function _exec(executableUrl, ...args) {
+  return _execWithInputAndEnv(executableUrl, false, false, ...args)
 }
 
-// Stromg. Stromg|Boolean, String[] -> Either
-function _executeWithInput(executableUrl, input, ...args) {
+// String, Object, String[] -> Either
+function _execWithEnv(executableUrl, env, ...args) {
+  return _execWithInputAndEnv(executableUrl, false, env, ...args)
+}
+
+// String, String, String[] -> Either
+function _execWithInput(executableUrl, input, ...args) {
+  return _execWithInputAndEnv(executableUrl, input, false, ...args)
+}
+
+// Stromg, String|Boolean, String[] -> Either
+function _execWithInputAndEnv(executableUrl, input, env, ...args) {
   const task = $.NSTask.alloc.init
 
   const stdin = $.NSPipe.pipe
@@ -120,6 +161,10 @@ function _executeWithInput(executableUrl, input, ...args) {
   if(input) {
     stdin.fileHandleForWriting.writeData($.NSString.alloc.initWithString(input).dataUsingEncoding($.NSUTF8StringEncoding))
     stdin.fileHandleForWriting.closeAndReturnError(false)
+  }
+
+  if(env) {
+    task.environment = env
   }
 
   task.arguments = args
@@ -151,7 +196,7 @@ function _store(key, value) {
 // String -> String|Boolean
 function _env(name) {
   try { return $.getenv(name) }
-  catch { return false }
+  catch { return '' }
 }
 
 function _exit(code = 0) {
