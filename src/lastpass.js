@@ -1,6 +1,7 @@
 #!/usr/bin/osascript -l JavaScript
 ObjC.import('stdlib')
 
+
 // Global configurations
 ////////////////////////
 const global = this
@@ -8,7 +9,7 @@ const global = this
 const app = Application.currentApplication()
 app.includeStandardAdditions = true
 
-const defaultEnv = { 'HOME': _env('HOME') }
+const defaultEnv = { 'HOME': _env('HOME'), 'PATH': _env('PATH') }
 const defaultItem = { icon: { path: 'icon_round.png' } }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -19,11 +20,11 @@ function run(argv) {
     const fnName = _toCamelCase(argv[0].replace(/^_+/, ''))
     const fn = global[fnName]
 
-    const lpass = _checkInstallation()
+    const lpass = _lpassIsInstalled()
 
     if (typeof fn === 'function') {
       const args = Array.prototype.slice.call(argv, 1)
-      if (![signIn].includes(fn)) _checkStatus(lpass)
+      if (![signIn].includes(fn)) _lpassIsLogged(lpass)
       return fn.apply(global, [lpass, ...args])
     }
   }
@@ -37,14 +38,21 @@ function run(argv) {
 function signIn(lpass, username) {
   const password = _prompt('Enter password', 'Enter your LastPass master password', true)(_ => _exit())(_)
 
-  const env = { 'LPASS_DISABLE_PINENTRY': 1, ...defaultEnv }
+  const env = { 'LPASS_DISABLE_PINENTRY': 1 }
   _durationToSeconds(_env('agent_timeout'))(_)(d => env['LPASS_AGENT_TIMEOUT'] = d)
 
   _execWithInputAndEnv(lpass, password, env, 'login', '--trust', username)(err => _returnToAlfred(err))(_ => _returnToAlfred('Successfully logged in'))
 }
 
-function list() {
-  // not yet implemented
+function list(lpass) {
+  const urls = _lpassListing(lpass, '%ai,%al', _env("auto_refresh") === "1")
+  const users = new Map(_lpassListing(lpass, '%ai,%au'))
+  const names = new Map(_lpassListing(lpass, '%ai,%an'))
+  const groups = new Map(_lpassListing(lpass, '%ai,%ag'))
+
+  const items = urls.filter(([_, url]) => 'http://group' != url).map(([id, url]) => _makeLpassItem(id, names.get(id), groups.get(id), users.get(id), url))
+
+  _returnToAlfred({items: items})
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -52,16 +60,22 @@ function list() {
 // LastPass CLI integration
 ///////////////////////////
 
-// () -> Either
-function _checkInstallation() {
+// () -> String
+function _lpassIsInstalled() {
   // Check LastPass installation
   return _exec('/usr/bin/which', 'lpass') (_installResponse) (_)
 }
 
-// String -> Either
-function _checkStatus(lpass) {
+// String -> String
+function _lpassIsLogged(lpass) {
   // Check is authenticated
   return _execWithEnv(lpass, {}, 'status', '-q') (_signinResponse) (_)
+}
+
+function _lpassListing(lpass, format, sync=false) {
+  return _exec(lpass, 'ls', '--sync=' + (sync ? 'auto' : 'no'), '--color=never', '--format', format)
+              (_retryFeetchResponse)
+              (l => l.split(/\r?\n/).map(i => i.split(',')))
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -90,6 +104,30 @@ function _signinResponse() {
       icon: { path: 'icon_configure.png' },
     }))
   })
+}
+
+function _retryFeetchResponse(err) {
+  return _returnToAlfred({
+    rerun: 0.1,
+    items: [{ title: 'Unable to fetch items, retrying', subtitle: err, icon: { path: 'icon_round.png' } }]
+  })
+}
+
+function _makeLpassItem(id, name, group, username, url) {
+  const match = `${name} ${url} ${group}`
+  const displayURL = _env('hostnames_only') === "1" ? _getHostname(url)(_ => url)(_) : url
+  const subtitle = url == 'http://sn' ? `Secure note in ${group}` : `${username} | ${displayURL} in ${group}`
+
+  return {
+      uid: id,
+      title: name,
+      subtitle: subtitle,
+      match: match,
+      autocomplete: name,
+      arg: id,
+      icon: { path: 'icon_round.png' },
+      variables: { id: id, url: url, username: username },
+  }
 }
 
 // Object -> ()
@@ -157,9 +195,7 @@ function _execWithInputAndEnv(executableUrl, input, env, ...args) {
     stdin.fileHandleForWriting.closeAndReturnError(false)
   }
 
-  if (env) {
-    task.environment = env
-  }
+  task.environment = {...env, ...defaultEnv}
 
   task.arguments = args
   task.standardInput = stdin
@@ -201,6 +237,15 @@ const ExitOnLeft = e => l => OnLeft(e)(x => { l(x); _exit(0) })
 
 // String -> String
 const _toCamelCase = str => str.toLowerCase().replace(/([-_][a-z])/g, g => g[1].toUpperCase())
+
+// String -> String
+const _withScheme = url => /^(http|https):\/\//.test(url) ? url : `https://${url}`
+
+// String -> Either
+function _getHostname(url) {
+  try { return Right($.NSURL.URLWithString(_withScheme(url)).host.js) }
+  catch (err) { return Left(err) }
+}
 
 // String -> Integer
 function _durationToSeconds(duration) {
