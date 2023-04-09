@@ -1,7 +1,6 @@
 #!/usr/bin/osascript -l JavaScript
 ObjC.import('stdlib')
 
-
 // Global configurations
 ////////////////////////
 const global = this
@@ -10,17 +9,16 @@ const app = Application.currentApplication()
 app.includeStandardAdditions = true
 
 const defaultEnv = { 'HOME': _env('HOME'), 'PATH': _env('PATH') }
-const defaultItem = { icon: { path: 'icon_round.png' } }
 
 //---------------------------------------------------------------------------------------------------------------------
 
 // Entrypoint
 function run(argv) {
+  const lpass = _lpassIsInstalled()
+
   if (argv.length) {
     const fnName = _toCamelCase(argv[0].replace(/^_+/, ''))
     const fn = global[fnName]
-
-    const lpass = _lpassIsInstalled()
 
     if (typeof fn === 'function') {
       const args = Array.prototype.slice.call(argv, 1)
@@ -36,12 +34,10 @@ function run(argv) {
 ////////////////////
 
 function signIn(lpass, username) {
-  const password = _prompt('Enter password', 'Enter your LastPass master password', true)(_ => _exit())(_)
+  const options = _durationToSeconds(_env('agent_timeout')) (_ => { }) (d => ({ 'LPASS_AGENT_TIMEOUT': d }))
+  const password = _prompt('Enter password', 'Enter your LastPass master password', true) (_ => _exit()) (_)
 
-  const env = { 'LPASS_DISABLE_PINENTRY': 1 }
-  _durationToSeconds(_env('agent_timeout'))(_)(d => env['LPASS_AGENT_TIMEOUT'] = d)
-
-  _execWithInputAndEnv(lpass, password, env, 'login', '--trust', username)(err => _returnToAlfred(err))(_ => _returnToAlfred('Successfully logged in'))
+  return _lpassLogIn(lpass, username, password, options)
 }
 
 function list(lpass) {
@@ -52,7 +48,7 @@ function list(lpass) {
 
   const items = urls.filter(([_, url]) => 'http://group' != url).map(([id, url]) => _makeLpassItem(id, names.get(id), groups.get(id), users.get(id), url))
 
-  _returnToAlfred({items: items})
+  return _returnToAlfred({ items: items })
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -69,13 +65,19 @@ function _lpassIsInstalled() {
 // String -> String
 function _lpassIsLogged(lpass) {
   // Check is authenticated
-  return _execWithEnv(lpass, {}, 'status', '-q') (_signinResponse) (_)
+  return _exec(lpass, 'status', '-q') (_signinResponse) (_)
 }
 
-function _lpassListing(lpass, format, sync=false) {
+function _lpassLogIn(lpass, username, password, options = {}) {
+  const env = { 'LPASS_DISABLE_PINENTRY': 1, ...options }
+
+  return _execWithInputAndEnv(lpass, password, env, 'login', '--trust', username) (_returnToAlfred) (_ => _returnToAlfred('Successfully logged in'))
+}
+
+function _lpassListing(lpass, format, sync = false) {
   return _exec(lpass, 'ls', '--sync=' + (sync ? 'auto' : 'no'), '--color=never', '--format', format)
-              (_retryFeetchResponse)
-              (l => l.split(/\r?\n/).map(i => i.split(',')))
+    (_retryFeetchResponse)
+    (l => l.split(/\r?\n/).map(i => i.split(',')))
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -106,27 +108,35 @@ function _signinResponse() {
   })
 }
 
+// () -> ()
 function _retryFeetchResponse(err) {
   return _returnToAlfred({
     rerun: 0.1,
-    items: [{ title: 'Unable to fetch items, retrying', subtitle: err, icon: { path: 'icon_round.png' } }]
+    items: [{
+      title: 'Unable to fetch items, retrying',
+      subtitle: err,
+      icon: { path: 'icon_round.png' }
+    }]
   })
 }
 
+// String,String,String,String,String -> AlfredItem
 function _makeLpassItem(id, name, group, username, url) {
   const match = `${name} ${url} ${group}`
-  const displayURL = _env('hostnames_only') === "1" ? _getHostname(url)(_ => url)(_) : url
-  const subtitle = url == 'http://sn' ? `Secure note in ${group}` : `${username} | ${displayURL} in ${group}`
+  const displayURL = _env('hostnames_only') === "1" ? _getHostname(url) (_ => url) (_) : url
+  const [subtitle, type] = url == 'http://sn' ?
+    [`Secure note in ${group}`, 'secure_note'] :
+    [`${username} | ${displayURL} in ${group}`, 'password']
 
   return {
-      uid: id,
-      title: name,
-      subtitle: subtitle,
-      match: match,
-      autocomplete: name,
-      arg: id,
-      icon: { path: 'icon_round.png' },
-      variables: { id: id, url: url, username: username },
+    uid: id,
+    title: name,
+    subtitle: subtitle,
+    match: match,
+    autocomplete: name,
+    arg: id,
+    icon: { path: 'icon_round.png' },
+    variables: { id, url, type, username },
   }
 }
 
@@ -195,7 +205,7 @@ function _execWithInputAndEnv(executableUrl, input, env, ...args) {
     stdin.fileHandleForWriting.closeAndReturnError(false)
   }
 
-  task.environment = {...env, ...defaultEnv}
+  task.environment = { ...env, ...defaultEnv }
 
   task.arguments = args
   task.standardInput = stdin
@@ -232,8 +242,8 @@ function _exit(code = 0) {
 const _ = x => x
 const Left = x => l => r => l(x)
 const Right = x => l => r => r(x)
-const OnLeft = e => l => e(l)(x => x)
-const ExitOnLeft = e => l => OnLeft(e)(x => { l(x); _exit(0) })
+const OnLeft = e => l => e(l) (x => x)
+const ExitOnLeft = e => l => OnLeft(e) (x => { l(x); _exit(0) })
 
 // String -> String
 const _toCamelCase = str => str.toLowerCase().replace(/([-_][a-z])/g, g => g[1].toUpperCase())
