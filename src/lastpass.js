@@ -51,6 +51,24 @@ function list(lpass) {
   return _returnToAlfred({ items: items })
 }
 
+function copyPassword(lpass, id) {
+  _lpassCopy(lpass, id, 'password')
+  _alfredWorkflowResponse('sensitive_data', { msg: `Password copied to clipboard for ${_env('clipboard_timeout')} seconds` })
+}
+
+function copyUsername(lpass, id) {
+  _lpassCopy(lpass, id, 'username')
+  _alfredWorkflowResponse('sensitive_data', { msg: `Username copied to clipboard for ${_env('clipboard_timeout')} seconds` })
+}
+
+function open(lpass, id) {
+  _returnToAlfred(`open ${id}`)
+}
+
+function viewInLastpass(lpass, id) {
+  _returnToAlfred(`view ${id}`)
+}
+
 //---------------------------------------------------------------------------------------------------------------------
 
 // LastPass CLI integration
@@ -68,6 +86,7 @@ function _lpassIsLogged(lpass) {
   return _exec(lpass, 'status', '-q') (_loginResponse) (_)
 }
 
+// String -> ()
 function _lpassLogIn(lpass, username, password, options = {}) {
   const env = { 'LPASS_DISABLE_PINENTRY': 1, ...options }
 
@@ -75,9 +94,11 @@ function _lpassLogIn(lpass, username, password, options = {}) {
 }
 
 function _lpassListing(lpass, format, sync = false) {
-  return _exec(lpass, 'ls', '--sync=' + (sync ? 'auto' : 'no'), '--color=never', '--format', format)
-    (_retryFeetchResponse)
-    (l => l.split(/\r?\n/).map(i => i.split(',')))
+  return _exec(lpass, 'ls', '--sync=' + (sync ? 'auto' : 'no'), '--color=never', '--format', format) (_retryFeetchResponse) (_splitLines)
+}
+
+function _lpassCopy(lpass, id, field) {
+  return _exec(lpass, 'show', '--sync=auto', '--clip', `--${field}`, id) (_returnToAlfred) (_)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -118,6 +139,11 @@ function _retryFeetchResponse(err) {
       icon: { path: 'icon_round.png' }
     }]
   })
+}
+
+// String, Object -> ()
+function _alfredWorkflowResponse(arg, variables = {}) {
+  return _returnToAlfred({ alfredworkflow: { arg, variables } })
 }
 
 // String,String,String,String,String -> AlfredItem
@@ -249,6 +275,11 @@ const ExitOnLeft = e => l => OnLeft(e) (x => { l(x); _exit(0) })
 
 // String -> String
 const _toCamelCase = str => str.toLowerCase().replace(/([-_][a-z])/g, g => g[1].toUpperCase())
+
+// String -> String
+const _capitalize = str => `${str.charAt(0).toUpperCase()}${str.slice(1)}`
+
+const _splitLines = str => str.split(/\r?\n/).map(i => i.split(','))
 
 // String -> String
 const _withScheme = url => /^(http|https):\/\//.test(url) ? url : `https://${url}`

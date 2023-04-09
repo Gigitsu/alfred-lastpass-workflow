@@ -8,11 +8,37 @@
 	<string>Productivity</string>
 	<key>connections</key>
 	<dict>
+		<key>1DCF40DF-499F-466D-AEB8-22A5234BBE91</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>9D275170-FD2A-4CC0-8C25-7EB1A41672F0</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>28DC9509-BDE3-4DDD-B9F9-B63F2F619538</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
 				<string>AC1420A8-86FC-41F6-977D-0F101DEC7DD9</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>2FA82009-4F52-4157-A2C3-E9407AD8BF42</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>9D275170-FD2A-4CC0-8C25-7EB1A41672F0</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -32,6 +58,19 @@
 				<string></string>
 				<key>sourceoutputuid</key>
 				<string>_button1</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>7BEE3A39-9B4E-4320-8D1C-AF71FEB4ABE5</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>54A09B9C-2656-4F5D-A996-340C8F770D3F</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
 				<key>vitoclose</key>
 				<false/>
 			</dict>
@@ -75,12 +114,145 @@
 				<key>vitoclose</key>
 				<false/>
 			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>2FA82009-4F52-4157-A2C3-E9407AD8BF42</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
 		</array>
 		<key>890BB9F8-9EA8-452E-9DFB-95A3645E919F</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
 				<string>889420DF-70FB-4C91-BA11-D1AE04AA4494</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>CEFCFC96-69A9-4D17-8F01-D8912DCBAE16</string>
+				<key>modifiers</key>
+				<integer>131072</integer>
+				<key>modifiersubtext</key>
+				<string>{var:modifier_shift}</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>1DCF40DF-499F-466D-AEB8-22A5234BBE91</string>
+				<key>modifiers</key>
+				<integer>1048576</integer>
+				<key>modifiersubtext</key>
+				<string>{var:modifier_command}</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+			<dict>
+				<key>destinationuid</key>
+				<string>A8875664-12BD-4CC7-997F-C1A8FD5E3711</string>
+				<key>modifiers</key>
+				<integer>524288</integer>
+				<key>modifiersubtext</key>
+				<string>{var:modifier_option}</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>9487D1F1-620C-4C23-9C0D-E8526953691E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>7BEE3A39-9B4E-4320-8D1C-AF71FEB4ABE5</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>9D275170-FD2A-4CC0-8C25-7EB1A41672F0</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>9FAA129C-2C8B-4AA9-8671-FF4EE42153B6</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>9FAA129C-2C8B-4AA9-8671-FF4EE42153B6</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B3D9680E-7578-4133-85B1-52022476A344</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>A8875664-12BD-4CC7-997F-C1A8FD5E3711</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>9D275170-FD2A-4CC0-8C25-7EB1A41672F0</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>B3D9680E-7578-4133-85B1-52022476A344</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>DC8EE3F6-5CA7-43E3-B8DE-539F6F045614</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>sourceoutputuid</key>
+				<string>6EC75B76-BB0D-4887-92D0-5E440B4EDB1A</string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>CEFCFC96-69A9-4D17-8F01-D8912DCBAE16</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>9D275170-FD2A-4CC0-8C25-7EB1A41672F0</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>DC8EE3F6-5CA7-43E3-B8DE-539F6F045614</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>9487D1F1-620C-4C23-9C0D-E8526953691E</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -154,50 +326,6 @@
 			<string>78D42D6F-BE33-47AD-8701-EE0122A028C9</string>
 			<key>version</key>
 			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>lastpathcomponent</key>
-				<false/>
-				<key>onlyshowifquerypopulated</key>
-				<true/>
-				<key>removeextension</key>
-				<false/>
-				<key>text</key>
-				<string>{query}</string>
-				<key>title</key>
-				<string>LastPass Login</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.notification</string>
-			<key>uid</key>
-			<string>AC1420A8-86FC-41F6-977D-0F101DEC7DD9</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>concurrently</key>
-				<false/>
-				<key>escaping</key>
-				<integer>102</integer>
-				<key>script</key>
-				<string>./lastpass.js 'log_in' $username</string>
-				<key>scriptargtype</key>
-				<integer>1</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>type</key>
-				<integer>5</integer>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.action.script</string>
-			<key>uid</key>
-			<string>28DC9509-BDE3-4DDD-B9F9-B63F2F619538</string>
-			<key>version</key>
-			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -302,6 +430,251 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<true/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>LastPass</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>AC1420A8-86FC-41F6-977D-0F101DEC7DD9</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>./lastpass.js 'log_in' $username</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>5</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>28DC9509-BDE3-4DDD-B9F9-B63F2F619538</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>{var:modifier_none.lowercase}</string>
+				<key>passthroughargument</key>
+				<false/>
+				<key>variables</key>
+				<dict/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>2FA82009-4F52-4157-A2C3-E9407AD8BF42</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>{var:modifier_shift.lowercase}</string>
+				<key>passthroughargument</key>
+				<false/>
+				<key>variables</key>
+				<dict/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>CEFCFC96-69A9-4D17-8F01-D8912DCBAE16</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>{var:modifier_command.lowercase}</string>
+				<key>passthroughargument</key>
+				<false/>
+				<key>variables</key>
+				<dict/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>1DCF40DF-499F-466D-AEB8-22A5234BBE91</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>./lastpass.js $1 $id</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>5</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>9FAA129C-2C8B-4AA9-8671-FF4EE42153B6</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>conditions</key>
+				<array>
+					<dict>
+						<key>inputstring</key>
+						<string></string>
+						<key>matchcasesensitive</key>
+						<false/>
+						<key>matchmode</key>
+						<integer>0</integer>
+						<key>matchstring</key>
+						<string>sensitive_data</string>
+						<key>outputlabel</key>
+						<string>Clear clipboard</string>
+						<key>uid</key>
+						<string>6EC75B76-BB0D-4887-92D0-5E440B4EDB1A</string>
+					</dict>
+				</array>
+				<key>elselabel</key>
+				<string>else</string>
+				<key>hideelse</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.conditional</string>
+			<key>uid</key>
+			<string>B3D9680E-7578-4133-85B1-52022476A344</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>matchmode</key>
+				<integer>0</integer>
+				<key>matchstring</key>
+				<string> </string>
+				<key>replacestring</key>
+				<string>_</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.replace</string>
+			<key>uid</key>
+			<string>9D275170-FD2A-4CC0-8C25-7EB1A41672F0</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argument</key>
+				<string>{var:modifier_option.lowercase}</string>
+				<key>passthroughargument</key>
+				<false/>
+				<key>variables</key>
+				<dict/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.argument</string>
+			<key>uid</key>
+			<string>A8875664-12BD-4CC7-997F-C1A8FD5E3711</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>autopaste</key>
+				<false/>
+				<key>clipboardtext</key>
+				<string>{clipboard:0}</string>
+				<key>ignoredynamicplaceholders</key>
+				<false/>
+				<key>transient</key>
+				<false/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.clipboard</string>
+			<key>uid</key>
+			<string>7BEE3A39-9B4E-4320-8D1C-AF71FEB4ABE5</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>Clipboard cleared</string>
+				<key>title</key>
+				<string>LastPass</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>54A09B9C-2656-4F5D-A996-340C8F770D3F</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{var:msg}</string>
+				<key>title</key>
+				<string>LastPass</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>DC8EE3F6-5CA7-43E3-B8DE-539F6F045614</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>action</key>
 				<integer>0</integer>
 				<key>argument</key>
@@ -352,6 +725,19 @@
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>seconds</key>
+				<string>{var:clipboard_timeout}</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.utility.delay</string>
+			<key>uid</key>
+			<string>9487D1F1-620C-4C23-9C0D-E8526953691E</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>text</key>
 				<string>Search LastPass for '{query}'</string>
 			</dict>
@@ -367,68 +753,147 @@
 	<string></string>
 	<key>uidata</key>
 	<dict>
+		<key>1DCF40DF-499F-466D-AEB8-22A5234BBE91</key>
+		<dict>
+			<key>xpos</key>
+			<real>375</real>
+			<key>ypos</key>
+			<real>310</real>
+		</dict>
 		<key>28DC9509-BDE3-4DDD-B9F9-B63F2F619538</key>
 		<dict>
 			<key>xpos</key>
-			<real>550</real>
+			<real>630</real>
 			<key>ypos</key>
-			<real>195</real>
+			<real>175</real>
+		</dict>
+		<key>2FA82009-4F52-4157-A2C3-E9407AD8BF42</key>
+		<dict>
+			<key>xpos</key>
+			<real>455</real>
+			<key>ypos</key>
+			<real>220</real>
+		</dict>
+		<key>54A09B9C-2656-4F5D-A996-340C8F770D3F</key>
+		<dict>
+			<key>xpos</key>
+			<real>1045</real>
+			<key>ypos</key>
+			<real>495</real>
 		</dict>
 		<key>78D42D6F-BE33-47AD-8701-EE0122A028C9</key>
 		<dict>
 			<key>xpos</key>
-			<real>550</real>
+			<real>630</real>
 			<key>ypos</key>
-			<real>70</real>
+			<real>50</real>
+		</dict>
+		<key>7BEE3A39-9B4E-4320-8D1C-AF71FEB4ABE5</key>
+		<dict>
+			<key>xpos</key>
+			<real>875</real>
+			<key>ypos</key>
+			<real>495</real>
 		</dict>
 		<key>861B2868-ECAB-4998-A447-65152165D1ED</key>
 		<dict>
 			<key>xpos</key>
-			<real>45</real>
+			<real>30</real>
 			<key>ypos</key>
-			<real>565</real>
+			<real>520</real>
 		</dict>
 		<key>889420DF-70FB-4C91-BA11-D1AE04AA4494</key>
 		<dict>
 			<key>xpos</key>
-			<real>240</real>
+			<real>265</real>
 			<key>ypos</key>
-			<real>275</real>
+			<real>65</real>
 		</dict>
 		<key>890BB9F8-9EA8-452E-9DFB-95A3645E919F</key>
 		<dict>
 			<key>xpos</key>
-			<real>45</real>
+			<real>30</real>
 			<key>ypos</key>
-			<real>270</real>
+			<real>60</real>
+		</dict>
+		<key>9487D1F1-620C-4C23-9C0D-E8526953691E</key>
+		<dict>
+			<key>note</key>
+			<string>Clipboard clearing delay</string>
+			<key>xpos</key>
+			<real>795</real>
+			<key>ypos</key>
+			<real>525</real>
+		</dict>
+		<key>9D275170-FD2A-4CC0-8C25-7EB1A41672F0</key>
+		<dict>
+			<key>xpos</key>
+			<real>555</real>
+			<key>ypos</key>
+			<real>355</real>
 		</dict>
 		<key>9E2DCA84-9871-477E-AC81-64A3F4923576</key>
 		<dict>
 			<key>xpos</key>
-			<real>715</real>
+			<real>795</real>
 			<key>ypos</key>
-			<real>35</real>
+			<real>15</real>
+		</dict>
+		<key>9FAA129C-2C8B-4AA9-8671-FF4EE42153B6</key>
+		<dict>
+			<key>xpos</key>
+			<real>630</real>
+			<key>ypos</key>
+			<real>325</real>
+		</dict>
+		<key>A8875664-12BD-4CC7-997F-C1A8FD5E3711</key>
+		<dict>
+			<key>xpos</key>
+			<real>335</real>
+			<key>ypos</key>
+			<real>355</real>
 		</dict>
 		<key>AC1420A8-86FC-41F6-977D-0F101DEC7DD9</key>
 		<dict>
 			<key>xpos</key>
-			<real>715</real>
+			<real>795</real>
 			<key>ypos</key>
-			<real>195</real>
+			<real>175</real>
+		</dict>
+		<key>B3D9680E-7578-4133-85B1-52022476A344</key>
+		<dict>
+			<key>xpos</key>
+			<real>795</real>
+			<key>ypos</key>
+			<real>345</real>
 		</dict>
 		<key>BAC34065-493A-4E6B-934A-CA46C199551B</key>
 		<dict>
 			<key>xpos</key>
-			<real>240</real>
+			<real>225</real>
 			<key>ypos</key>
-			<real>565</real>
+			<real>520</real>
+		</dict>
+		<key>CEFCFC96-69A9-4D17-8F01-D8912DCBAE16</key>
+		<dict>
+			<key>xpos</key>
+			<real>415</real>
+			<key>ypos</key>
+			<real>265</real>
+		</dict>
+		<key>DC8EE3F6-5CA7-43E3-B8DE-539F6F045614</key>
+		<dict>
+			<key>xpos</key>
+			<real>635</real>
+			<key>ypos</key>
+			<real>495</real>
 		</dict>
 		<key>F3829D5E-58C2-4E88-A324-DF9FF9AE77FF</key>
 		<dict>
 			<key>xpos</key>
-			<real>45</real>
+			<real>30</real>
 			<key>ypos</key>
-			<real>705</real>
+			<real>660</real>
 		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
@@ -500,7 +965,7 @@
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>30s</string>
+				<string>30</string>
 				<key>placeholder</key>
 				<string></string>
 				<key>required</key>
@@ -509,7 +974,7 @@
 				<true/>
 			</dict>
 			<key>description</key>
-			<string>How log password will be in your clipboard</string>
+			<string>How many seconds password will be in your clipboard</string>
 			<key>label</key>
 			<string>Clipboard Timeout</string>
 			<key>type</key>
@@ -521,18 +986,10 @@
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>Open and Fill</string>
+				<string>Copy Password</string>
 				<key>pairs</key>
 				<array>
 					<array>
-						<string>Open and Fill</string>
-						<string>Open and Fill</string>
-					</array>
-					<array>
-						<string>View in LastPass</string>
-						<string>View in LastPass</string>
-					</array>
-					<array>
 						<string>Copy Username</string>
 						<string>Copy Username</string>
 					</array>
@@ -541,8 +998,12 @@
 						<string>Copy Password</string>
 					</array>
 					<array>
-						<string>Copy One-Time Password</string>
-						<string>Copy OTP</string>
+						<string>Open</string>
+						<string>Open</string>
+					</array>
+					<array>
+						<string>View in LastPass</string>
+						<string>View in LastPass</string>
 					</array>
 				</array>
 			</dict>
@@ -559,17 +1020,43 @@
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>View in LastPass</string>
+				<string>Copy Username</string>
 				<key>pairs</key>
 				<array>
 					<array>
-						<string>Open and Fill</string>
-						<string>Open and Fill</string>
+						<string>Copy Username</string>
+						<string>Copy Username</string>
+					</array>
+					<array>
+						<string>Copy Password</string>
+						<string>Copy Password</string>
+					</array>
+					<array>
+						<string>Open</string>
+						<string>Open</string>
 					</array>
 					<array>
 						<string>View in LastPass</string>
 						<string>View in LastPass</string>
 					</array>
+				</array>
+			</dict>
+			<key>description</key>
+			<string></string>
+			<key>label</key>
+			<string>⇧↩</string>
+			<key>type</key>
+			<string>popupbutton</string>
+			<key>variable</key>
+			<string>modifier_shift</string>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string>Open</string>
+				<key>pairs</key>
+				<array>
 					<array>
 						<string>Copy Username</string>
 						<string>Copy Username</string>
@@ -579,8 +1066,12 @@
 						<string>Copy Password</string>
 					</array>
 					<array>
-						<string>Copy One-Time Password</string>
-						<string>Copy OTP</string>
+						<string>Open</string>
+						<string>Open</string>
+					</array>
+					<array>
+						<string>View in LastPass</string>
+						<string>View in LastPass</string>
 					</array>
 				</array>
 			</dict>
@@ -597,18 +1088,10 @@
 			<key>config</key>
 			<dict>
 				<key>default</key>
-				<string>Copy Password</string>
+				<string>View in LastPass</string>
 				<key>pairs</key>
 				<array>
 					<array>
-						<string>Open and Fill</string>
-						<string>Open and Fill</string>
-					</array>
-					<array>
-						<string>View in LastPass</string>
-						<string>View in LastPass</string>
-					</array>
-					<array>
 						<string>Copy Username</string>
 						<string>Copy Username</string>
 					</array>
@@ -617,8 +1100,12 @@
 						<string>Copy Password</string>
 					</array>
 					<array>
-						<string>Copy One-Time Password</string>
-						<string>Copy OTP</string>
+						<string>Open</string>
+						<string>Open</string>
+					</array>
+					<array>
+						<string>View in LastPass</string>
+						<string>View in LastPass</string>
 					</array>
 				</array>
 			</dict>
@@ -630,82 +1117,6 @@
 			<string>popupbutton</string>
 			<key>variable</key>
 			<string>modifier_option</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>default</key>
-				<string>Copy Username</string>
-				<key>pairs</key>
-				<array>
-					<array>
-						<string>Open and Fill</string>
-						<string>Open and Fill</string>
-					</array>
-					<array>
-						<string>View in LastPass</string>
-						<string>View in LastPass</string>
-					</array>
-					<array>
-						<string>Copy Username</string>
-						<string>Copy Username</string>
-					</array>
-					<array>
-						<string>Copy Password</string>
-						<string>Copy Password</string>
-					</array>
-					<array>
-						<string>Copy One-Time Password</string>
-						<string>Copy OTP</string>
-					</array>
-				</array>
-			</dict>
-			<key>description</key>
-			<string></string>
-			<key>label</key>
-			<string>⌃↩</string>
-			<key>type</key>
-			<string>popupbutton</string>
-			<key>variable</key>
-			<string>modifier_control</string>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>default</key>
-				<string>Copy OTP</string>
-				<key>pairs</key>
-				<array>
-					<array>
-						<string>Open and Fill</string>
-						<string>Open and Fill</string>
-					</array>
-					<array>
-						<string>View in LastPass</string>
-						<string>View in LastPass</string>
-					</array>
-					<array>
-						<string>Copy Username</string>
-						<string>Copy Username</string>
-					</array>
-					<array>
-						<string>Copy Password</string>
-						<string>Copy Password</string>
-					</array>
-					<array>
-						<string>Copy One-Time Password</string>
-						<string>Copy OTP</string>
-					</array>
-				</array>
-			</dict>
-			<key>description</key>
-			<string></string>
-			<key>label</key>
-			<string>⇧↩</string>
-			<key>type</key>
-			<string>popupbutton</string>
-			<key>variable</key>
-			<string>modifier_shift</string>
 		</dict>
 		<dict>
 			<key>config</key>
