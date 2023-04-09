@@ -135,7 +135,9 @@ function _makeLpassItem(id, name, group, username, url) {
     match: match,
     autocomplete: name,
     arg: id,
+    action: { url: url },
     icon: { path: 'icon_round.png' },
+    text: { copy: `${group}\\${name}` },
     variables: { id, url, type, username },
   }
 }
