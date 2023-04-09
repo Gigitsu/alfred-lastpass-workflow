@@ -184,7 +184,7 @@
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>script</key>
-				<string>./lastpass.js 'sign_in' $username</string>
+				<string>./lastpass.js 'log_in' $username</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -280,9 +280,9 @@
 						<key>matchmode</key>
 						<integer>0</integer>
 						<key>matchstring</key>
-						<string>sign_in</string>
+						<string>log_in</string>
 						<key>outputlabel</key>
-						<string>Sign In</string>
+						<string>Log In</string>
 						<key>uid</key>
 						<string>F9D097DC-88A0-4775-8790-C4EAC583CDF9</string>
 					</dict>
@@ -296,25 +296,6 @@
 			<string>alfred.workflow.utility.conditional</string>
 			<key>uid</key>
 			<string>889420DF-70FB-4C91-BA11-D1AE04AA4494</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>externaltriggerid</key>
-				<string>search_items</string>
-				<key>passinputasargument</key>
-				<true/>
-				<key>passvariables</key>
-				<true/>
-				<key>workflowbundleid</key>
-				<string>self</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.callexternaltrigger</string>
-			<key>uid</key>
-			<string>BAC34065-493A-4E6B-934A-CA46C199551B</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -348,6 +329,25 @@
 			<string>861B2868-ECAB-4998-A447-65152165D1ED</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>externaltriggerid</key>
+				<string>search_items</string>
+				<key>passinputasargument</key>
+				<true/>
+				<key>passvariables</key>
+				<true/>
+				<key>workflowbundleid</key>
+				<string>self</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.callexternaltrigger</string>
+			<key>uid</key>
+			<string>BAC34065-493A-4E6B-934A-CA46C199551B</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 		<dict>
 			<key>config</key>

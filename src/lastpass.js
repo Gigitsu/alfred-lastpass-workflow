@@ -22,7 +22,7 @@ function run(argv) {
 
     if (typeof fn === 'function') {
       const args = Array.prototype.slice.call(argv, 1)
-      if (![signIn].includes(fn)) _lpassIsLogged(lpass)
+      if (![logIn].includes(fn)) _lpassIsLogged(lpass)
       return fn.apply(global, [lpass, ...args])
     }
   }
@@ -33,7 +33,7 @@ function run(argv) {
 // Exposed functions
 ////////////////////
 
-function signIn(lpass, username) {
+function logIn(lpass, username) {
   const options = _durationToSeconds(_env('agent_timeout')) (_ => { }) (d => ({ 'LPASS_AGENT_TIMEOUT': d }))
   const password = _prompt('Enter password', 'Enter your LastPass master password', true) (_ => _exit()) (_)
 
@@ -65,7 +65,7 @@ function _lpassIsInstalled() {
 // String -> String
 function _lpassIsLogged(lpass) {
   // Check is authenticated
-  return _exec(lpass, 'status', '-q') (_signinResponse) (_)
+  return _exec(lpass, 'status', '-q') (_loginResponse) (_)
 }
 
 function _lpassLogIn(lpass, username, password, options = {}) {
@@ -97,11 +97,11 @@ function _installResponse() {
 }
 
 // () -> ()
-function _signinResponse() {
+function _loginResponse() {
   return _returnToAlfred({
     items: _env('accounts_list').split(/\r?\n/).map(account => ({
-      title: `SignIn as ${account}`, subtitle: `Authenticate using ${account} master password`,
-      arg: 'sign_in',
+      title: `Log in as ${account}`, subtitle: `Unlock your vault using ${account}'s master password`,
+      arg: 'log_in',
       variables: { username: account },
       icon: { path: 'icon_configure.png' },
     }))
