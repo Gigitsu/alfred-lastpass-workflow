@@ -106,7 +106,7 @@ function _lpassListing(lpass, format, sync = false) {
 }
 
 function _lpassCopy(lpass, id, field) {
-  return _exec(lpass, 'show', '--sync=auto', '--clip', `--${field}`, id) (_returnToAlfred) (_)
+  return _exec(lpass, 'show', '--sync=now', '--clip', `--${field}`, id) (_returnToAlfred) (_)
 }
 
 //---------------------------------------------------------------------------------------------------------------------

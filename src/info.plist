@@ -63,18 +63,7 @@
 			</dict>
 		</array>
 		<key>7BEE3A39-9B4E-4320-8D1C-AF71FEB4ABE5</key>
-		<array>
-			<dict>
-				<key>destinationuid</key>
-				<string>54A09B9C-2656-4F5D-A996-340C8F770D3F</string>
-				<key>modifiers</key>
-				<integer>0</integer>
-				<key>modifiersubtext</key>
-				<string></string>
-				<key>vitoclose</key>
-				<false/>
-			</dict>
-		</array>
+		<array/>
 		<key>861B2868-ECAB-4998-A447-65152165D1ED</key>
 		<array>
 			<dict>
@@ -640,27 +629,6 @@
 				<key>removeextension</key>
 				<false/>
 				<key>text</key>
-				<string>Clipboard cleared</string>
-				<key>title</key>
-				<string>LastPass</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.notification</string>
-			<key>uid</key>
-			<string>54A09B9C-2656-4F5D-A996-340C8F770D3F</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>lastpathcomponent</key>
-				<false/>
-				<key>onlyshowifquerypopulated</key>
-				<false/>
-				<key>removeextension</key>
-				<false/>
-				<key>text</key>
 				<string>{var:msg}</string>
 				<key>title</key>
 				<string>LastPass</string>
@@ -773,13 +741,6 @@
 			<real>455</real>
 			<key>ypos</key>
 			<real>220</real>
-		</dict>
-		<key>54A09B9C-2656-4F5D-A996-340C8F770D3F</key>
-		<dict>
-			<key>xpos</key>
-			<real>1045</real>
-			<key>ypos</key>
-			<real>495</real>
 		</dict>
 		<key>78D42D6F-BE33-47AD-8701-EE0122A028C9</key>
 		<dict>
