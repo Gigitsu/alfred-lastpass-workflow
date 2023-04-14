@@ -41,14 +41,22 @@ function logIn(lpass, username) {
 }
 
 function list(lpass) {
-  const urls = _lpassListing(lpass, '%ai,%al', _env("auto_refresh") === "1")
-  const users = new Map(_lpassListing(lpass, '%ai,%au'))
-  const names = new Map(_lpassListing(lpass, '%ai,%an'))
-  const groups = new Map(_lpassListing(lpass, '%ai,%ag'))
+  _getCache('items') (_x => {
+    const urls = _lpassListing(lpass, '%ai,%al', _env("auto_refresh") === "1")
+    const users = new Map(_lpassListing(lpass, '%ai,%au'))
+    const names = new Map(_lpassListing(lpass, '%ai,%an'))
+    const groups = new Map(_lpassListing(lpass, '%ai,%ag'))
 
-  const items = urls.filter(([_, url]) => 'http://group' != url).map(([id, url]) => _makeLpassItem(id, names.get(id), groups.get(id), users.get(id), url))
+    const items = urls.filter(([_, url]) => 'http://group' != url).map(([id, url]) => _makeLpassItem(id, names.get(id), groups.get(id), users.get(id), url))
 
-  return _returnToAlfred({ items: items })
+    _saveCache('items', items) (_returnToAlfred) (_)
+
+    return _returnToAlfred({ items: items })
+  }) (items => {
+    _clearCache('items')
+
+    return _returnToAlfred({rerun: 0.1, items: items })
+  })
 }
 
 function copyPassword(lpass, id) {
@@ -175,6 +183,22 @@ function _returnToAlfred(obj) {
   _exit(0)
 }
 
+function _saveCache(name, data) {
+  try { return Right(_writeJSON(`${_env("alfred_workflow_cache")}/${name}.json`, data)) }
+  catch (err) { return Left(err) }
+}
+
+function _getCache(name) {
+  const path = `${_env("alfred_workflow_cache")}/${name}.json`
+
+  if(_fileExists(path)) return Right(_readJSON(path))
+  else return Left(`File ${path} don't exists`)
+}
+
+function _clearCache(name) {
+  _removeFile(`${_env("alfred_workflow_cache")}/${name}.json`)
+}
+
 // String, String -> ()
 function _storeConfig(key, value) {
   Application('com.runningwithcrayons.Alfred')
@@ -198,11 +222,69 @@ function _prompt(title, msg, hidden = false) {
   catch { return Left() }
 }
 
+// String -> [Object]
+function _readJSON(path) {
+  return JSON.parse(_readFile(path))
+}
+
+// String, [String] -> ()
+function _writeJSON(path, data) {
+  _mkpath($(path).stringByDeletingLastPathComponent.js)
+  _writeFile(path, JSON.stringify(data))
+}
+
+// String -> ()
+function _mkpath(path) {
+  $.NSFileManager
+    .defaultManager
+    .createDirectoryAtPathWithIntermediateDirectoriesAttributesError(path, true, undefined, undefined)
+}
+
+// String -> String
+function _readFile(path) {
+  const data = $.NSFileManager
+    .defaultManager
+    .contentsAtPath(path)
+
+  return $.NSString
+    .alloc
+    .initWithDataEncoding(data, $.NSUTF8StringEncoding).js
+}
+
+// String, String -> ()
+function _writeFile(path, content) {
+  $.NSString
+    .alloc
+    .initWithUTF8String(content)
+    .writeToFileAtomicallyEncodingError(path, true, $.NSUTF8StringEncoding, null)
+}
+
+// String -> ()
+function _removeFile(path) {
+  $.NSFileManager
+    .defaultManager
+    .removeItemAtPathError(path, null)
+}
+
+// String -> Boolean
+function _fileExists(path) {
+  return $.NSFileManager
+    .defaultManager
+    .isReadableFileAtPath(path)
+}
+
 // String -> ()
 function _stdout(text) {
   $.NSFileHandle
     .fileHandleWithStandardOutput
-    .writeData($.NSString.alloc.initWithString(text + '\n').dataUsingEncoding($.NSUTF8StringEncoding))
+    .writeData($.NSString.alloc.initWithString(`${text}\n`).dataUsingEncoding($.NSUTF8StringEncoding))
+}
+
+// String -> ()
+function _stderr(text) {
+  $.NSFileHandle
+    .fileHandleWithStandardError
+    .writeData($.NSString.alloc.initWithString(`${text}\n`).dataUsingEncoding($.NSUTF8StringEncoding))
 }
 
 // String, String[] -> Either
@@ -279,7 +361,7 @@ const _toCamelCase = str => str.toLowerCase().replace(/([-_][a-z])/g, g => g[1].
 // String -> String
 const _capitalize = str => `${str.charAt(0).toUpperCase()}${str.slice(1)}`
 
-const _splitLines = str => str.split(/\r?\n/).map(i => i.split(','))
+const _splitLines = str => str.split(/\r?\n/).map(i => i.split(/,(.*)/s).slice(0, 2))
 
 // String -> String
 const _withScheme = url => /^(http|https):\/\//.test(url) ? url : `https://${url}`
