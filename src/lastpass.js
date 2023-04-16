@@ -1,5 +1,7 @@
 #!/usr/bin/osascript -l JavaScript
 ObjC.import('stdlib')
+ObjC.import('Foundation')
+ObjC.import('Security')
 
 // Global configurations
 ////////////////////////
@@ -9,6 +11,12 @@ const app = Application.currentApplication()
 app.includeStandardAdditions = true
 
 const defaultEnv = { 'HOME': _env('HOME'), 'PATH': _env('PATH') }
+
+// Password generators
+
+const alphabet = [...Array.from(Array(26), (_, i) => String.fromCharCode(i + 65)), ...Array.from(Array(26), (_, i) => String.fromCharCode(i + 97))]
+const numbers = Array.from(Array(10).keys())
+const symbols = Array.from('!#$%&*@^')
 
 //---------------------------------------------------------------------------------------------------------------------
 
@@ -22,7 +30,7 @@ function run(argv) {
 
     if (typeof fn === 'function') {
       const args = Array.prototype.slice.call(argv, 1)
-      if (![logIn].includes(fn)) _lpassIsLogged(lpass)
+      if (![logIn, logOut, generate].includes(fn)) _lpassIsLogged(lpass)
       return fn.apply(global, [lpass, ...args])
     }
   }
@@ -38,6 +46,10 @@ function logIn(lpass, username) {
   const password = _prompt('Enter password', 'Enter your LastPass master password', true) (_ => _exit()) (_)
 
   return _lpassLogIn(lpass, username, password, options)
+}
+
+function logOut(lpass) {
+  return _lpassLogOut(lpass)
 }
 
 function list(lpass) {
@@ -61,12 +73,12 @@ function list(lpass) {
 
 function copyPassword(lpass, id) {
   _lpassCopy(lpass, id, 'password')
-  _alfredWorkflowResponse('sensitive_data', { msg: `Password copied to clipboard for ${_env('clipboard_timeout')} seconds` })
+  _alfredWorkflowResponse({arg: 'sensitive_data', variables: { msg: `Password copied to clipboard for ${_env('clipboard_timeout')} seconds` }})
 }
 
 function copyUsername(lpass, id) {
   _lpassCopy(lpass, id, 'username')
-  _alfredWorkflowResponse('sensitive_data', { msg: `Username copied to clipboard for ${_env('clipboard_timeout')} seconds` })
+  _alfredWorkflowResponse({arg: 'sensitive_data', variables: { msg: `Username copied to clipboard for ${_env('clipboard_timeout')} seconds` }})
 }
 
 function open(lpass, id) {
@@ -75,6 +87,23 @@ function open(lpass, id) {
 
 function viewInLastpass(lpass, id) {
   _returnToAlfred(`view ${id}`)
+}
+
+function generate(lpass, size = 16) {
+  const data = $.NSMutableData.dataWithLength(size)
+
+  if($.SecRandomCopyBytes($.kSecRandomDefault, size, data.mutableBytes) == 0) {
+    const chars = _shuffle([...alphabet, ...numbers, ...symbols, ...numbers, ...symbols])
+    const factor = 256/chars.length
+
+    const strBuilder = []
+    for (let i = 0; i < size; i++) {
+      let rnd = data.mutableBytes[i]
+      strBuilder.push(chars[Math.floor(rnd / factor)])
+    }
+
+    _returnToAlfred(strBuilder.join(""))
+  }
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -101,8 +130,12 @@ function _lpassLogIn(lpass, username, password, options = {}) {
   return _execWithInputAndEnv(lpass, password, env, 'login', '--trust', username) (_returnToAlfred) (_ => _returnToAlfred('Successfully logged in'))
 }
 
+function _lpassLogOut(lpass) {
+  return _exec(lpass, 'logout', '-f') (_returnToAlfred) (_ => _alfredWorkflowResponse({arg: 'notify', variables: {msg: 'Successfully logged out'}}))
+}
+
 function _lpassListing(lpass, format, sync = false) {
-  return _exec(lpass, 'ls', '--sync=' + (sync ? 'auto' : 'no'), '--color=never', '--format', format) (_retryFeetchResponse) (_splitLines)
+  return _exec(lpass, 'ls', '--sync=' + (sync ? 'auto' : 'no'), '--color=never', '--format', format) (_retryFetchResponse) (_splitLines)
 }
 
 function _lpassCopy(lpass, id, field) {
@@ -138,7 +171,7 @@ function _loginResponse() {
 }
 
 // () -> ()
-function _retryFeetchResponse(err) {
+function _retryFetchResponse(err) {
   return _returnToAlfred({
     rerun: 0.1,
     items: [{
@@ -150,8 +183,8 @@ function _retryFeetchResponse(err) {
 }
 
 // String, Object -> ()
-function _alfredWorkflowResponse(arg, variables = {}) {
-  return _returnToAlfred({ alfredworkflow: { arg, variables } })
+function _alfredWorkflowResponse({arg, config = {}, variables = {}}) {
+  return _returnToAlfred({ alfredworkflow: { arg, config, variables } })
 }
 
 // String,String,String,String,String -> AlfredItem
@@ -370,6 +403,19 @@ const _withScheme = url => /^(http|https):\/\//.test(url) ? url : `https://${url
 function _getHostname(url) {
   try { return Right($.NSURL.URLWithString(_withScheme(url)).host.js) }
   catch (err) { return Left(err) }
+}
+
+function _shuffle(x) {
+  let currentIndex = x.length,  randomIndex;
+
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [x[currentIndex], x[randomIndex]] = [x[randomIndex], x[currentIndex]];
+  }
+
+  return x;
 }
 
 // String -> Integer
