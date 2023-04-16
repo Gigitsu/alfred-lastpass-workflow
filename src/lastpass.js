@@ -14,7 +14,7 @@ const defaultEnv = { 'HOME': _env('HOME'), 'PATH': _env('PATH') }
 
 // Password generators
 
-const alphabet = [...Array.from(Array(26), (_, i) => String.fromCharCode(i + 65)), ...Array.from(Array(26), (_, i) => String.fromCharCode(i + 97))]
+const letters = [...Array.from(Array(26), (_, i) => String.fromCharCode(i + 65)), ...Array.from(Array(26), (_, i) => String.fromCharCode(i + 97))]
 const numbers = Array.from(Array(10).keys())
 const symbols = Array.from('!#$%&*@^')
 
@@ -33,7 +33,11 @@ function run(argv) {
       if (![logIn, logOut, generate].includes(fn)) _lpassIsLogged(lpass)
       return fn.apply(global, [lpass, ...args])
     }
+
+    _printHelp(fnName)
   }
+
+  _printHelp()
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -89,21 +93,23 @@ function viewInLastpass(lpass, id) {
   _returnToAlfred(`view ${id}`)
 }
 
-function generate(lpass, size = 16) {
-  const data = $.NSMutableData.dataWithLength(size)
-
-  if($.SecRandomCopyBytes($.kSecRandomDefault, size, data.mutableBytes) == 0) {
-    const chars = _shuffle([...alphabet, ...numbers, ...symbols, ...numbers, ...symbols])
-    const factor = 256/chars.length
-
-    const strBuilder = []
-    for (let i = 0; i < size; i++) {
-      let rnd = data.mutableBytes[i]
-      strBuilder.push(chars[Math.floor(rnd / factor)])
-    }
-
-    _returnToAlfred(strBuilder.join(""))
+function generate(lpass, length = 16) {
+  const items = []
+  const formats = {
+    'Only letters': letters,
+    'Letters and numbers': [...letters, ...numbers, ...numbers],
+    'Letters and symbols': [...letters, ...symbols, ...symbols],
+    'Letters, numbers and symbols': [...letters, ...numbers, ...numbers, ...symbols, ...symbols],
   }
+
+  for (const [name, chars] of Object.entries(formats)) {
+    for(let i = 0; i < 2; i++) {
+      let pwd = _passwordGen(length, chars)
+      items.push({title: pwd, arg: 'copy' , subtitle: name, variables: {password: pwd}, icon: { path: 'icon_round.png' }})
+    }
+  }
+
+  _returnToAlfred({items})
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -236,6 +242,13 @@ function _clearCache(name) {
 function _storeConfig(key, value) {
   Application('com.runningwithcrayons.Alfred')
     .setConfiguration(key, { toValue: value, inWorkflow: _env('alfred_workflow_bundleid') });
+}
+
+function _printHelp(fnName = "") {
+  if(fnName) _stdout(`Function "${fnName}" not found`)
+  else _stdout('No argument passed')
+
+  _exit(1)
 }
 
 //---------------------------------------------------------------------------------------------------------------------
@@ -403,6 +416,24 @@ const _withScheme = url => /^(http|https):\/\//.test(url) ? url : `https://${url
 function _getHostname(url) {
   try { return Right($.NSURL.URLWithString(_withScheme(url)).host.js) }
   catch (err) { return Left(err) }
+}
+
+// String -> String
+function _passwordGen(length, chars) {
+  const data = $.NSMutableData.dataWithLength(length)
+
+  if($.SecRandomCopyBytes($.kSecRandomDefault, length, data.mutableBytes) == 0) {
+    const shuffledChars = _shuffle(chars)
+    const factor = 256/chars.length
+
+    const strBuilder = []
+    for (let i = 0; i < length; i++) {
+      let charIndex = Math.floor(data.mutableBytes[i] / factor)
+      strBuilder.push(shuffledChars[charIndex])
+    }
+
+    return strBuilder.join("")
+  }
 }
 
 function _shuffle(x) {
