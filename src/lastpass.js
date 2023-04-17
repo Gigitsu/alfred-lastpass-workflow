@@ -96,10 +96,10 @@ function viewInLastpass(lpass, id) {
 function generate(lpass, length = 16) {
   const items = []
   const formats = {
-    'Only letters': letters,
+    'Letters, numbers and symbols': [...letters, ...numbers, ...numbers, ...symbols, ...symbols],
     'Letters and numbers': [...letters, ...numbers, ...numbers],
     'Letters and symbols': [...letters, ...symbols, ...symbols],
-    'Letters, numbers and symbols': [...letters, ...numbers, ...numbers, ...symbols, ...symbols],
+    'Only letters': letters,
   }
 
   for (const [name, chars] of Object.entries(formats)) {
